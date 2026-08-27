@@ -203,37 +203,26 @@
   function defaultPlan(){
     var mk=function(n,log,sets,reps,rest,tgt){ return {id:genId("ex"),n:n,log:log,sets:sets,reps:reps||"",rest:rest,tgt:tgt||""}; };
     return [
-      {id:genId("d"),warm:true,title:"Calentamiento (8–12 min)",weekday:null,ex:[
-        mk("Muñecas y hombros (círculos, band pull-aparts)",false,1,"",0,"~3 min"),
-        mk("Movilidad del grupo del día + aproximación",false,1,"",0,"~4 min"),
-        mk("Core: hollow hold o plancha",false,1,"",0,"~2 min"),
+      {id:genId("d"),title:"Día 1 — Full body",weekday:1,ex:[
+        mk("Sentadilla o prensa de piernas",true,3,"8–12",120),
+        mk("Press de pecho (máquina o mancuernas)",true,3,"8–12",90),
+        mk("Remo (máquina o polea)",true,3,"8–12",90),
+        mk("Press de hombros",true,3,"10–12",90),
+        mk("Plancha (core)",false,3,"",45,"30–45s"),
       ]},
-      {id:genId("d"),title:"Empuje (Pecho · Hombros · Tríceps)",weekday:1,ex:[
-        mk("Handstand contra la pared (complemento)",false,1,"",0,"3–5 min"),
-        mk("Press de pecho en máquina o Smith",true,4,"6–10",120),
-        mk("Press inclinado con mancuernas",true,3,"8–12",90),
-        mk("Press de hombros (Smith o mancuernas)",true,3,"8–12",90),
-        mk("Peck deck (aperturas)",true,3,"10–15",75),
-        mk("Elevaciones laterales",true,4,"12–20",60),
-        mk("Extensión de tríceps en polea",true,3,"10–15",60),
+      {id:genId("d"),title:"Día 2 — Full body",weekday:3,ex:[
+        mk("Peso muerto rumano o hip thrust",true,3,"8–12",120),
+        mk("Jalón al pecho",true,3,"8–12",90),
+        mk("Press inclinado",true,3,"8–12",90),
+        mk("Elevaciones laterales",true,3,"12–15",60),
+        mk("Curl de bíceps",true,3,"10–12",60),
       ]},
-      {id:genId("d"),title:"Tirón (Espalda · Bíceps)",weekday:3,ex:[
-        mk("Dominadas o Jalón al pecho",true,4,"6–10",120),
-        mk("Remo sentado en polea",true,4,"8–12",90),
-        mk("Remo con pecho apoyado o máquina",true,3,"10–12",90),
-        mk("Face pulls",true,3,"12–20",60),
-        mk("Curl de bíceps",true,3,"8–12",60),
-        mk("Curl martillo",true,3,"10–12",60),
-        mk("Hanging knee raises (core)",true,3,"8–15",60),
-      ]},
-      {id:genId("d"),title:"Piernas (Cuádriceps · Femoral · Glúteo)",weekday:5,ex:[
-        mk("Sentadilla en Smith o Hack squat",true,4,"6–10",150),
-        mk("Prensa de piernas (leg press)",true,3,"10–15",120),
-        mk("Extensión de cuádriceps",true,3,"12–15",75),
-        mk("Curl femoral (camilla)",true,3,"10–15",75),
-        mk("Hip thrust o empuje de glúteo",true,3,"8–12",90),
-        mk("Elevación de gemelos",true,4,"12–20",60),
-        mk("Plancha o hollow hold (core)",false,3,"",45,"30–45s"),
+      {id:genId("d"),title:"Día 3 — Full body",weekday:5,ex:[
+        mk("Prensa de piernas",true,3,"10–12",120),
+        mk("Press de pecho",true,3,"8–12",90),
+        mk("Remo en máquina",true,3,"10–12",90),
+        mk("Extensión de tríceps",true,3,"10–15",60),
+        mk("Elevación de gemelos",true,3,"12–20",60),
       ]},
     ];
   }
