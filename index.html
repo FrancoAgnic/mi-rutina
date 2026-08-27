@@ -200,31 +200,57 @@
   var CUR=weekKey(), PREV=addDays(CUR,-7);
 
   // ---------- rutina por defecto (semilla para cada perfil nuevo) ----------
-  function defaultPlan(){
-    var mk=function(n,log,sets,reps,rest,tgt){ return {id:genId("ex"),n:n,log:log,sets:sets,reps:reps||"",rest:rest,tgt:tgt||""}; };
-    return [
-      {id:genId("d"),title:"Día 1 — Full body",weekday:1,ex:[
-        mk("Sentadilla o prensa de piernas",true,3,"8–12",120),
-        mk("Press de pecho (máquina o mancuernas)",true,3,"8–12",90),
-        mk("Remo (máquina o polea)",true,3,"8–12",90),
-        mk("Press de hombros",true,3,"10–12",90),
-        mk("Plancha (core)",false,3,"",45,"30–45s"),
-      ]},
-      {id:genId("d"),title:"Día 2 — Full body",weekday:3,ex:[
-        mk("Peso muerto rumano o hip thrust",true,3,"8–12",120),
-        mk("Jalón al pecho",true,3,"8–12",90),
-        mk("Press inclinado",true,3,"8–12",90),
-        mk("Elevaciones laterales",true,3,"12–15",60),
-        mk("Curl de bíceps",true,3,"10–12",60),
-      ]},
-      {id:genId("d"),title:"Día 3 — Full body",weekday:5,ex:[
-        mk("Prensa de piernas",true,3,"10–12",120),
-        mk("Press de pecho",true,3,"8–12",90),
-        mk("Remo en máquina",true,3,"10–12",90),
-        mk("Extensión de tríceps",true,3,"10–15",60),
-        mk("Elevación de gemelos",true,3,"12–20",60),
-      ]},
-    ];
+  // Generador de rutinas de ejemplo: elegís 3/4/5 días y tipo (full body o split).
+  function mkE(n,sets,reps,rest){ return {id:genId("ex"),n:n,log:true,sets:sets,reps:reps,rest:rest,tgt:""}; }
+  function mkC(n,sets,rest,tgt){ return {id:genId("ex"),n:n,log:false,sets:sets,reps:"",rest:rest,tgt:tgt}; }
+  function mkDay(title,wd,ex){ return {id:genId("d"),title:title,weekday:wd,ex:ex}; }
+
+  function buildExample(days, type){
+    var wd = ({3:[1,3,5],4:[1,2,4,5],5:[1,2,3,4,5]})[days] || [1,3,5];
+    var out=[];
+    if(type==="fullbody"){
+      var FB=[
+        ["Full body A",[mkE("Sentadilla o prensa de piernas",3,"8–12",120),mkE("Press de pecho",3,"8–12",90),mkE("Remo (máquina o polea)",3,"8–12",90),mkE("Press de hombros",3,"10–12",90),mkC("Plancha (core)",3,45,"30–45s")]],
+        ["Full body B",[mkE("Peso muerto rumano o hip thrust",3,"8–12",120),mkE("Jalón al pecho",3,"8–12",90),mkE("Press inclinado",3,"8–12",90),mkE("Elevaciones laterales",3,"12–15",60),mkE("Curl de bíceps",3,"10–12",60)]],
+        ["Full body C",[mkE("Prensa de piernas",3,"10–12",120),mkE("Press de pecho (máquina)",3,"8–12",90),mkE("Remo en máquina",3,"10–12",90),mkE("Extensión de tríceps",3,"10–15",60),mkE("Elevación de gemelos",3,"12–20",60)]],
+        ["Full body D",[mkE("Zancadas o sentadilla búlgara",3,"10–12",90),mkE("Fondos o press cerrado",3,"8–12",90),mkE("Remo con mancuerna",3,"10–12",90),mkE("Face pulls",3,"12–20",60),mkC("Abdominales (plancha)",3,45,"30–45s")]],
+        ["Full body E",[mkE("Hip thrust",3,"8–12",90),mkE("Dominadas o jalón",3,"6–10",90),mkE("Aperturas (peck deck)",3,"10–15",60),mkE("Curl martillo",3,"10–12",60),mkE("Elevación de gemelos",3,"12–20",60)]],
+      ];
+      for(var i=0;i<days;i++){ out.push(mkDay(FB[i][0],wd[i],FB[i][1])); }
+    } else {
+      var tpl;
+      if(days===3){
+        tpl=[
+          ["Empuje (Pecho · Hombros · Tríceps)",[mkE("Press de pecho",4,"6–10",120),mkE("Press inclinado",3,"8–12",90),mkE("Press de hombros",3,"8–12",90),mkE("Elevaciones laterales",3,"12–20",60),mkE("Extensión de tríceps",3,"10–15",60)]],
+          ["Tirón (Espalda · Bíceps)",[mkE("Jalón al pecho o dominadas",4,"6–10",120),mkE("Remo sentado en polea",4,"8–12",90),mkE("Remo en máquina",3,"10–12",90),mkE("Face pulls",3,"12–20",60),mkE("Curl de bíceps",3,"8–12",60)]],
+          ["Piernas",[mkE("Sentadilla o prensa",4,"6–10",150),mkE("Prensa de piernas",3,"10–15",120),mkE("Extensión de cuádriceps",3,"12–15",75),mkE("Curl femoral",3,"10–15",75),mkE("Elevación de gemelos",4,"12–20",60)]],
+        ];
+      } else if(days===4){
+        tpl=[
+          ["Pecho y Tríceps",[mkE("Press de pecho",4,"6–10",120),mkE("Press inclinado",3,"8–12",90),mkE("Aperturas (peck deck)",3,"10–15",60),mkE("Extensión de tríceps en polea",3,"10–15",60),mkE("Fondos o press cerrado",3,"8–12",90)]],
+          ["Espalda y Bíceps",[mkE("Jalón al pecho o dominadas",4,"6–10",120),mkE("Remo sentado en polea",4,"8–12",90),mkE("Remo en máquina",3,"10–12",90),mkE("Curl de bíceps",3,"8–12",60),mkE("Curl martillo",3,"10–12",60)]],
+          ["Piernas",[mkE("Sentadilla o prensa",4,"6–10",150),mkE("Prensa de piernas",3,"10–15",120),mkE("Extensión de cuádriceps",3,"12–15",75),mkE("Curl femoral",3,"10–15",75),mkE("Elevación de gemelos",4,"12–20",60)]],
+          ["Hombros y Core",[mkE("Press de hombros",4,"8–12",90),mkE("Elevaciones laterales",4,"12–20",60),mkE("Elevaciones frontales",3,"12–15",60),mkE("Face pulls",3,"12–20",60),mkC("Plancha (core)",3,45,"30–45s")]],
+        ];
+      } else {
+        tpl=[
+          ["Pecho",[mkE("Press de pecho",4,"6–10",120),mkE("Press inclinado",3,"8–12",90),mkE("Aperturas (peck deck)",3,"10–15",60),mkE("Fondos o press cerrado",3,"8–12",90)]],
+          ["Espalda",[mkE("Jalón al pecho o dominadas",4,"6–10",120),mkE("Remo sentado en polea",4,"8–12",90),mkE("Remo en máquina",3,"10–12",90),mkE("Face pulls",3,"12–20",60)]],
+          ["Piernas",[mkE("Sentadilla o prensa",4,"6–10",150),mkE("Prensa de piernas",3,"10–15",120),mkE("Extensión de cuádriceps",3,"12–15",75),mkE("Curl femoral",3,"10–15",75),mkE("Elevación de gemelos",4,"12–20",60)]],
+          ["Hombros",[mkE("Press de hombros",4,"8–12",90),mkE("Elevaciones laterales",4,"12–20",60),mkE("Elevaciones frontales",3,"12–15",60),mkE("Face pulls",3,"12–20",60)]],
+          ["Brazos",[mkE("Curl de bíceps",3,"8–12",60),mkE("Curl martillo",3,"10–12",60),mkE("Extensión de tríceps en polea",3,"10–15",60),mkE("Press cerrado o fondos",3,"8–12",90)]],
+        ];
+      }
+      for(var j=0;j<tpl.length;j++){ out.push(mkDay(tpl[j][0],wd[j],tpl[j][1])); }
+    }
+    return out;
+  }
+
+  function exampleDesc(days,type){
+    if(type==="fullbody") return days+" días de cuerpo completo: cada día entrenás todo el cuerpo. Ideal para empezar.";
+    if(days===3) return "3 días (split): Empuje / Tirón / Piernas.";
+    if(days===4) return "4 días (split): Pecho+Tríceps / Espalda+Bíceps / Piernas / Hombros+Core.";
+    return "5 días (split): un grupo por día — Pecho / Espalda / Piernas / Hombros / Brazos.";
   }
 
   // ---------- almacenamiento ----------
@@ -332,7 +358,7 @@
         +'<button class="btn primary" id="ed1" style="width:100%;margin-top:16px">➕ Crear mi primer día</button>'
         +'<button class="btn" id="ed2" style="width:100%;margin-top:8px">Cargar rutina de ejemplo</button></div>';
       wrap.querySelector("#ed1").onclick=function(){ dayForm(); };
-      wrap.querySelector("#ed2").onclick=function(){ if(confirm("¿Cargar la rutina de ejemplo (Empuje/Tirón/Piernas)? La podés editar después.")){ data.plan=defaultPlan(); saveData(); render(); } };
+      wrap.querySelector("#ed2").onclick=function(){ exampleForm(); };
       updateCounts();
       return;
     }
@@ -452,6 +478,32 @@
           var name=box.querySelector("#dn").value.trim(); if(!name){ box.querySelector("#dn").focus(); return; }
           var wv=box.querySelector("#dw").value; var wd=wv===""?null:parseInt(wv,10);
           data.plan.push({id:genId("d"),title:name,weekday:wd,ex:[]}); saveData(); closeModal(); render();
+        };
+      });
+  }
+
+  // ----- elegir rutina de ejemplo (días + tipo) -----
+  function exampleForm(){
+    var days=3, type="fullbody";
+    openModal("Rutina de ejemplo",
+      '<label class="flabel">¿Cuántos días por semana?</label>'
+      +'<div class="seg" id="exd"><button data-v="3">3 días</button><button data-v="4">4 días</button><button data-v="5">5 días</button></div>'
+      +'<label class="flabel">Tipo</label>'
+      +'<div class="seg" id="ext"><button data-v="fullbody">Full body</button><button data-v="split">Por grupo muscular</button></div>'
+      +'<p class="muted" id="exdesc" style="font-size:12.5px;margin-top:12px;line-height:1.5"></p>'
+      +'<button class="btn primary" id="exload" style="width:100%;margin-top:12px">Cargar esta rutina</button>',
+      function(box){
+        function refresh(){
+          box.querySelectorAll("#exd button").forEach(function(b){ b.classList.toggle("on", parseInt(b.getAttribute("data-v"),10)===days); });
+          box.querySelectorAll("#ext button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-v")===type); });
+          box.querySelector("#exdesc").textContent=exampleDesc(days,type);
+        }
+        box.querySelectorAll("#exd button").forEach(function(b){ b.onclick=function(){ days=parseInt(b.getAttribute("data-v"),10); refresh(); }; });
+        box.querySelectorAll("#ext button").forEach(function(b){ b.onclick=function(){ type=b.getAttribute("data-v"); refresh(); }; });
+        refresh();
+        box.querySelector("#exload").onclick=function(){
+          if(data.plan.length && !confirm("Esto reemplaza tu rutina actual por la de ejemplo. ¿Continuar?")) return;
+          data.plan=buildExample(days,type); saveData(); closeModal(); editMode=false; render();
         };
       });
   }
