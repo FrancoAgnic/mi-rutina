@@ -108,6 +108,7 @@
   .btn.primary{background:var(--primary);color:#fff;border-color:transparent}
   .btn.danger{color:var(--danger)}
   .foot{margin-top:18px;font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+  .empty{background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:26px 18px;text-align:center}
 
   .rest{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:50;width:min(528px,calc(100% - 24px));
     background:var(--card);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:14px;
@@ -245,7 +246,7 @@
   function saveApp(){ try{ localStorage.setItem(APPKEY,JSON.stringify(app)); }catch(e){} }
   function dataKey(pid){ return "mi-rutina-data-"+pid; }
   function loadData(pid){ try{ var s=JSON.parse(localStorage.getItem(dataKey(pid))); if(s&&s.plan) return s; }catch(e){}
-    return { firstWeek:CUR, plan:defaultPlan(), weeks:{} }; }
+    return { firstWeek:CUR, plan:[], weeks:{} }; }
   var data=null;
   function saveData(){ if(app.current) try{ localStorage.setItem(dataKey(app.current),JSON.stringify(data)); }catch(e){} }
 
@@ -335,6 +336,17 @@
     $("editbtn").textContent=editMode?"✓ Terminar edición":"✏️ Editar rutina";
 
     var wrap=$("days"); wrap.innerHTML="";
+    if(data.plan.length===0){
+      wrap.innerHTML='<div class="empty"><div style="font-size:34px">🏗️</div>'
+        +'<b style="font-size:16px;display:block;margin-top:8px">Tu rutina está vacía</b>'
+        +'<p class="muted" style="font-size:13px;margin:6px 0 0">Creá tu primer día y agregá tus ejercicios.</p>'
+        +'<button class="btn primary" id="ed1" style="width:100%;margin-top:16px">➕ Crear mi primer día</button>'
+        +'<button class="btn" id="ed2" style="width:100%;margin-top:8px">Cargar rutina de ejemplo</button></div>';
+      wrap.querySelector("#ed1").onclick=function(){ dayForm(); };
+      wrap.querySelector("#ed2").onclick=function(){ if(confirm("¿Cargar la rutina de ejemplo (Empuje/Tirón/Piernas)? La podés editar después.")){ data.plan=defaultPlan(); saveData(); render(); } };
+      updateCounts();
+      return;
+    }
     var todayWd=new Date().getDay(), letter=65;
     data.plan.forEach(function(day){
       var badge=day.warm?"🔥":String.fromCharCode(letter++);
